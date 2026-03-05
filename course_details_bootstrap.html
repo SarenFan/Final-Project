@@ -6,43 +6,48 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-<div class="container mt-5">
-    <h2>{{ course.name }}</h2>
-    <div class="card-columns-fluid">
-        {% for lesson in course.lesson_set.all %}
-            <div class="card mt-3">
-                <div class="card-header">
-                    <h5>Lesson {{ lesson.order|add:1 }}: {{ lesson.title }}</h5>
-                </div>
-                <div class="card-body">
-                    <p>{{ lesson.content }}</p>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <a class="navbar-brand" href="#">Online Course App</a>
+    </nav>
 
-    <h3 class="mt-5">Course Exam</h3>
-    <form action="{% url 'onlinecourse:submit' course.id %}" method="post">
-        {% csrf_token %}
-        {% for question in course.question_set.all %}
-            <div class="card mt-4">
-                <div class="card-header">
-                    <strong>{{ question.question_text }}</strong>
+    <div class="container mt-5">
+        <h2 class="mb-4">{{ course.name }}</h2>
+        
+        <div class="card-columns">
+            {% for lesson in course.lesson_set.all %}
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>Lesson {{ lesson.order|add:1 }}: {{ lesson.title }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ lesson.content }}</p>
+                    </div>
                 </div>
-                <div class="card-body">
-                    {% for choice in question.choice_set.all %}
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="choice_{{ choice.id }}" id="choice_{{ choice.id }}" value="{{ choice.id }}">
-                            <label class="form-check-label" for="choice_{{ choice.id }}">
-                                {{ choice.choice_text }}
-                            </label>
-                        </div>
-                    {% endfor %}
+            {% endfor %}
+        </div>
+
+        <h3 class="mt-5">Course Exam</h3>
+        <form action="{% url 'onlinecourse:submit' course.id %}" method="post">
+            {% csrf_token %}
+            {% for question in course.question_set.all %}
+                <div class="card mt-4 border-secondary">
+                    <div class="card-header bg-secondary text-white">
+                        <strong>{{ question.question_text }}</strong>
+                    </div>
+                    <div class="card-body">
+                        {% for choice in question.choice_set.all %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="choice_{{ choice.id }}" id="choice_{{ choice.id }}" value="{{ choice.id }}">
+                                <label class="form-check-label" for="choice_{{ choice.id }}">
+                                    {{ choice.choice_text }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-success btn-block mt-4">Submit Exam</button>
-    </form>
-</div>
+            {% endfor %}
+            <button type="submit" class="btn btn-success btn-lg btn-block mt-4 mb-5">Submit Exam</button>
+        </form>
+    </div>
 </body>
 </html>
